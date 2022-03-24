@@ -9,6 +9,9 @@ import {UserData} from "./../data";
 import './../App.css';
 import { DateRangePickerComponent } from "@syncfusion/ej2-react-calendars";
 import {Grid} from "@mui/material";
+import PickerCompare from "../Pickers/PickerCompare";
+
+
 
 export default function Graphics () {
 
@@ -54,11 +57,11 @@ export default function Graphics () {
                 end = endIndex;
             }
         }
-        console.log('startIndex ' + start);
-        console.log("endIndex " + end);
+        // console.log('startIndex ' + start);
+        // console.log("endIndex " + end);
         let resultArrayPurchase = UserData.purchases.slice(start, end+1);
 
-        console.log(resultArrayPurchase.value);
+        // console.log(resultArrayPurchase.value);
 
 
     // сумма за выбранный период
@@ -67,12 +70,12 @@ export default function Graphics () {
         let resultValuesSum = resultValuesArray.reduce(function(previousValue, currentValue, index, array) {
             return previousValue + currentValue;
         });
-        console.log(resultValuesSum);
+        // console.log(resultValuesSum);
 
     // расчет индексов для графика просмотры/клики
 
     let resultArrayCV = UserData.views_to_clicks.slice(start, end+1);
-    console.log(resultArrayCV);
+    // console.log(resultArrayCV);
 
     // просмотры/клики расчет процентов
 
@@ -87,6 +90,11 @@ export default function Graphics () {
 
     let converseCV = `${Number(sumViewArray)/Number(sumClickArray)*100}%`
 
+    let disabledYears = (args) => {
+        if (args.date.getYear() < 120 | args.date.getYear() === 122 ) {
+        args.isDisabled = true;
+    }
+}
 
     return (
         <>
@@ -99,8 +107,10 @@ export default function Graphics () {
                     maxDays={31}
                     format='yyyy-MM-dd'
                     separator='to'
-
+                    renderDayCell={disabledYears}
                 />
+            <PickerCompare />
+
             </div>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
