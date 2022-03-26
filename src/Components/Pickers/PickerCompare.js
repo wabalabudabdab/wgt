@@ -1,6 +1,6 @@
 import React, {Component, useEffect, useState} from "react";
-import {UserData} from "./../data";
-import './../App.css';
+import {UserData} from "../../data";
+import '../../App.css';
 import { DateRangePickerComponent } from "@syncfusion/ej2-react-calendars";
 
 
@@ -50,7 +50,7 @@ export default function PickerCompare () {
     // console.log('startIndex ' + start2);
     // console.log("endIndex " + end2);
 
-    // let resultArrayPurchase = UserData.purchases.slice(start, end+1);
+    // let resultArrayPurchase = UserData.basedata.slice(start, end+1);
     //
     // console.log(resultArrayPurchase.value);
 

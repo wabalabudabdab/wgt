@@ -1,57 +1,48 @@
 import './App.css';
 import React, {Component, useEffect, useState} from "react";
 import { DateRangePickerComponent } from "@syncfusion/ej2-react-calendars";
-import Graphics from "./Graphics/Graphics";
+import axios from 'axios'
+import Container from "./Components/Container";
+import { Provider } from 'react-redux';
 
-export default function App() {
-    const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
+import { connect } from 'react-redux';
+import { basedataFetchData } from "./Store/actions/basedata"
+import { baseData } from "./Store/reducers/basedata";
+import { useDispatch, useSelector } from 'react-redux';
 
-    // Примечание: пустой массив зависимостей [] означает, что
-    // этот useEffect будет запущен один раз
-    // аналогично componentDidMount()
-    useEffect(() => {
-        return fetch("https://wegotrip.com/api/v2/stats/plot", {mode: 'no-cors'})
-            .then(
-                res => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
-                    setItems(result);
-                },
-                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-                // чтобы не перехватывать исключения из ошибок в самих компонентах.
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            );
-    }, [])
 
-    if (error) {
-        return <div>Ошибка: {error.message}</div>;
-    } else if (!isLoaded) {
-        return <div>Загрузка...</div>;
-    } else {
+class App extends Component {
+
+    async componentDidMount() {
+        this.props.fetchData( "https://wegotrip.com/api/v2/stats/plot");
+    }
+
+
+    render() {
+        const data  = this.props.baseData;
+        console.log(data)
         return (
-                <>
-                    <div className="container">
-                        <Graphics/>
-                    </div>
-                    <ul>
-                        {items.map(item => (
-                            <li>
-                                {item.purchases.date}
-                            </li>
-                        ))}
-                    </ul>
-                </>
-
+            <>
+                <Container { ...data } />
+            </>
         );
     }
 
 }
 
 
+const mapStateToProps = state => {
+  return {
+      baseData: state.baseData
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+      fetchData: url => {dispatch(basedataFetchData(url))}
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
